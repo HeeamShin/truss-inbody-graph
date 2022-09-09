@@ -5,6 +5,8 @@ import json
 import os
 
 # Google Spreadsheet에 접근하기 위한 인증 파일
+# 민감한 내용을 담고 있기 때문에 Git submodule로 암호화함
+# https://dkswnkk.tistory.com/578
 gc = gspread.oauth(
   credentials_filename='./truss-inbody-rank/credentials.json',
   authorized_user_filename='./truss-inbody-rank/authorized_user.json'

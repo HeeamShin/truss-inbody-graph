@@ -20,6 +20,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        submodules: true
     - name: Set up python 3.9
       uses: actions/setup-python@v2
       with:
