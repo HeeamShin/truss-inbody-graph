@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truss InBody</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/series-label.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <!-- https://mchch.tistory.com/145 -->
+  <script src="data.json" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body>
+  <div id="container"></div>
+  <div id="json-reader"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      let chart;
+      
+      // JSON 파일로 저장된 데이터를 받아옴
+      let jsonData = JSON.parse(JSON.stringify(graphData));
+      
+      // 아래와 같은 array of object 형태로 만들기 위한 작업
+      // series:[{{name:"흐암",data:[[Date.UTC(2022,5,5),80],[Date.UTC(2022,5,5),80],],},},]
+
+      let seriesData = []; // 그래프를 그리는 데 사용될 array of object를 저장할 변수
+
+      // 데이터의 첫번째 요소는 [날짜, 사람1, 사람2, ... ] 형태이다. 배열의 길이를 통해 인원수를 알아낸다.
+      const numOfPeople = jsonData[0].length - 1;
+
+      // 사람의 숫자만큼 반복하면서 임시 변수에 각 사람별 데이터를 오브젝트 형태로 저장하고,
+      // 저장된 오브젝트를 seriesData에 추가
+
+      let inBodyData = []; // 그래프에 사용될 인바디 데이터 배열
+      
+
+      // 임시 날짜 저장용 변수
+      let tmpDate; 
+      let tmpYear;
+      let tmpMonth;
+      let tmpDay;
+      
+      for (let i = 1; i < numOfPeople + 1; i++) {
+        let tmpPerson = {   // 사람 이름와 인바디 점수 데이터를 저장할 변수
+          name: "",
+          data:[]
+        };
+        let tmpName = jsonData[0][i]; // 사람 이름을 저장할 변수
+        let tmpData = []; // 인바디 점수 데이터를 저장할 변수, list of [Date.UTC(2022,5,5),80]
+
+        for (let j = 1; j < jsonData.length; j++) {
+          if (jsonData[j][i]) { // j번째 행의 i 사람의 인바디 점수 데이터가 존재하면 데이터를 해당 사람에 추
+
+            // 문자열 형태의 날짜를 숫자로 변환
+            tmpDate = jsonData[j][0].split('.');
+            tmpYear = parseInt(tmpDate[0], 10);
+            tmpMonth = parseInt(tmpDate[1], 10);
+            tmpDay = parseInt(tmpDate[2], 10);
+
+            tmpData.push([Date.UTC(tmpYear, tmpMonth, tmpDay), parseInt(jsonData[j][i], 10)]);
+          }
+        }
+
+        // 추출한 데이터를 저장하고 임시 변수 초기화
+        tmpPerson.name = tmpName;
+        tmpPerson.data = tmpData;
+        inBodyData.push(tmpPerson);
+      }
+
+      chart = Highcharts.chart("container", {
+        title: {
+          text: "True Reps Under Syntha Six",
+        },
+
+        subtitle: {
+          text: "Source: Google Spreadsheet",
+        },
+
+        yAxis: {
+          title: {
+            text: "Inbody Score",
+          },
+        },
+
+        xAxis: {
+          accessibility: {
+            rangeDescription: "Range: Since 2022/06/01",
+          },
+          type: "datetime",
+          tickInterval: 24 * 36e5,
+          labels: {
+            format: "{value:%b-%e}",
+            align: "right",
+            rotation: -30,
+          },
+        },
+
+        legend: {
+          layout: "vertical",
+          align: "right",
+          verticalAlign: "middle",
+        },
+
+        plotOptions: {
+          series: {
+            label: {
+              connectorAllowed: false,
+            },
+            pointStart: Date.UTC(2022, 4, 30),
+            pointInterval: 24 * 36e5,
+          },
+        },
+
+        series: inBodyData,
+
+        responsive: {
+          rules: [
+            {
+              condition: {
+                maxWidth: 500,
+              },
+              chartOptions: {
+                legend: {
+                  layout: "horizontal",
+                  align: "center",
+                  verticalAlign: "bottom",
+                },
+              },
+            },
+          ],
+        },
+      });
+    });
+
+  </script>
+</body>
+
+</html>
