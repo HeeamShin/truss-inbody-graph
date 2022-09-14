@@ -13,7 +13,7 @@ gc = gspread.oauth(
 )
 
 # Google Spreadsheet 불러오기
-sh = gc.open_by_key("192H5Xt3kudcMavGAJ9-0dhuJCrnr_k51wUPxzWs2WJI")
+sh = gc.open("True Reps Under Syntha Six").sheet1
 
 # 2022/06/01부터 현재까지의 날짜 차이를 계산
 # https://jsikim1.tistory.com/144
