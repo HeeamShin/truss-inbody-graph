@@ -59,7 +59,7 @@
             // 문자열 형태의 날짜를 숫자로 변환
             tmpDate = jsonData[j][0].split('.');
             tmpYear = parseInt(tmpDate[0], 10);
-            tmpMonth = parseInt(tmpDate[1], 10);
+            tmpMonth = parseInt(tmpDate[1], 10) - 1;
             tmpDay = parseInt(tmpDate[2], 10);
 
             tmpData.push([Date.UTC(tmpYear, tmpMonth, tmpDay), parseInt(jsonData[j][i], 10)]);
