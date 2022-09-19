@@ -7,18 +7,26 @@
 웹사이트의 그래프는 [Highcharts](https://www.highcharts.com)를 이용하여 그렸습니다.
 
 ```mermaid
-flowchart TB
-    google-credential-files --> a1
-    subgraph sub-module: truss-inbody-rank
+flowchart LR
+  google-credential-files --> gspread-crawler.py
+  subgraph sub-module: truss-inbody-rank
     google-credential-files
-    end
-    subgraph truss-inbody-graph
-    a1
-    end
-    subgraph Netlify
-    c1-->c2
-    end
+  end
+  subgraph truss-inbody-graph
+    gspread-crawler.py == 생성 ==> data.json
+    data.json == 참조 ==> index.html
+  end
+    index.html-->Website
+  subgraph Netlify
+    Website
+  end
 ```
+
+1. Credential 파일
+2. 얽어 옴
+3. data json 업데이트
+4. 참조하여 index.html이 그래프 그림
+5. index.html을 Netlify에서 배포해줌
 
 ## 코드 구조
 
