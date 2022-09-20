@@ -40,3 +40,8 @@
 .highcharts-data-table tr:hover {
   background: #f1f7ff;
 }
+
+.footer-text {
+  text-align: center;
+  font-family: Verdana, sans-serif;
+}
